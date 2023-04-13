@@ -1,0 +1,70 @@
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+np.random.seed(32)
+
+class Evenlydistributed():
+    def __init__():
+        pass
+
+    # Evenly distributed
+    def Evenly_distributed(start=0.0, end=1.0, size=10000):
+
+        x = np.random.uniform(start, end, size=size)
+        plt.figure(1)
+        plt.hist(x)
+        plt.title('Histogram of Evenly distribution :')   
+        plt.savefig('Evenly.png')  
+
+    # Normal (Gaussion) distribution
+    def Normal_gaussion_distribution(mean_value=5, stddev=2, size=10000):
+
+        random_real_numbers = np.random.normal(mean_value, stddev, size)
+        plt.figure(2)
+        _, x, _ = plt.hist(random_real_numbers, bins=int(np.sqrt(size)), density=True)
+        y = stats.norm.pdf(x, mean_value, stddev)
+        plt.plot(x, y, label='$\mu$=%.1f, $\sigma^2$=%.1f'%(mean_value, stddev))
+        plt.title('Histogram of normal (Gaussion) distribution :')
+        plt.legend(loc='upper right')   
+        plt.savefig('Gaussion.png')   
+
+    # Roll dices distribution
+    def Roll_dices(input= {'2d6':[2, 6], '1d12':[1, 12], '2d10':[2, 10], '1d20':[1, 20]}, size=10000):
+
+        # hyper parameter     
+        fig, ((ax0, ax1), (ax2, ax3)) = plt.subplots(nrows=2, ncols=2, figsize=(8, 8))
+        colors = ['red', 'blue', 'tan', 'lime']
+        plot_index = [ax0, ax1, ax2, ax3]
+
+        # program define
+        def Dice_generator(number_of_dices, dices_faces):
+            roll_list = []
+            for _ in range(number_of_dices):
+                number = random.randint(1, dices_faces)
+                roll_list.append(number)
+            return sum(roll_list)
+
+        #　main program  
+        resulting_distributions = {}
+        for type_id, (index, (name, (number_of_dices, dices_faces))) in enumerate(zip(plot_index, input.items())):
+
+            totalRoll = []
+            for i in range(size):
+                oneRoll = Dice_generator(number_of_dices, dices_faces)
+                totalRoll.append(oneRoll)
+            resulting_distributions[name] = totalRoll
+
+            index.hist(totalRoll, bins=len(list(set(totalRoll))), density=True, color=colors[type_id], alpha=0.8)  
+            index.set_title(f'{name} for {len(totalRoll)} times:', fontsize=8)
+
+        plt.suptitle('Histogram of Roll dices distribution :')
+        fig.tight_layout()
+        plt.savefig('Rolldices.png') 
+    
+if __name__ == '__main__':
+
+    Evenly_distributed()
+    Normal_gaussion_distribution()   
+    Roll_dices()
+    plt.show()
