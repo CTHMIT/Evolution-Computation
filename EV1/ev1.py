@@ -2,7 +2,6 @@
 # ev1.py: The simplest EA ever!
 #
 # To run: python ev1.py --input ev1_example.cfg
-#         python ev1.py --input my_params.cfg
 #
 # Note: EV1 is fairly naive and has many fundamental limitations,
 #           however, even though it's simple, it works!
