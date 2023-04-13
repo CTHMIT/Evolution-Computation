@@ -22,7 +22,7 @@ class EV1_Config:
     7111093024 EV1 configuration class
     """
     # class variables
-    sectionName='7111093024EV1'
+    sectionName='ev1'
     options={'populationSize': (int,True),
              'generationCount': (int,True),
              'randomSeed': (int,True),
