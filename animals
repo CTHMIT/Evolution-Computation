@@ -1,0 +1,74 @@
+class animals():
+    def __init__(self):
+        pass
+    
+    def out(): 
+        new_sentences = []
+        ori_sentences = fixed.out
+        for line in ori_sentences:
+            if '%' in list(line):
+                #　print(f'with "%" : {line}')
+                new_line = line.split('%')
+                new_sentences.append(new_line)
+            else:
+                # print(f'without "%" : {line}')
+                new_sentences.append(line)
+        
+        # print(f'ori_sentences have {len(ori_sentences)} lines')
+        # print(f'new_sentences have {len(new_sentences)} lines')
+
+        pre_count_list = []
+        for sentence in new_sentences:
+            if isinstance(sentence, list):
+                for word in sentence:
+                    pre_count_list.append(word)
+            else:
+                pre_count_list.append(sentence)
+
+        count_list_output = {}  
+        sort_number_output = []  
+        for value in pre_count_list:
+            try:
+                if value.isalpha(): # find str element
+                    if value not in ['tomato', 'corn', 'carrot']:
+                        if value not in count_list_output.keys():
+                            count_list_output[value] = 1
+                        else:
+                            count_list_output[value] += 1
+
+                elif value.isdigit():  # find integer element      
+                    sort_number_output.append(int(value))   
+
+                else: # find other element 
+                    if value != '':
+                        if 'other' not in count_list_output.keys():
+                            count_list_output['other'] = 1
+                        else:
+                            count_list_output['other'] += 1
+
+            except:
+                print(f'exceptional value : {value}')
+
+
+        def ln(x):
+            """
+            ln(x) = lim n(n^(1/n) -1) ; n = float("inf")
+            """
+            n = 1000000000000.0
+            return n * ((x ** (1/n)) - 1)
+
+        output = {}
+        output['sort_number'] = sorted(sort_number_output, reverse = True)
+        output['sum_number'] = "{:.2e}".format(ln(sum(sort_number_output)))
+        output['item_count'] = count_list_output
+        output['total_count'] = {'total_count' : sum(count_list_output.values())}
+
+        # print(f'Pre count : {len(pre_count_list)}')
+        # print(f'Pos count : {output["total_count"]}')
+
+
+
+        return output.values()
+     
+
+    out = out()

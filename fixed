@@ -1,0 +1,45 @@
+class fixed:    
+    def __init__(self):
+        pass
+
+    def out():
+        filename='filepath'     
+        with open(filename, 'r') as f:
+            ori_sentences = f.read().split("\n") 
+            # print(len(ori_sentences))
+        new_sentences = []
+        for line in ori_sentences:
+            if '%' in list(line):           
+                # print(f'with "%" : {line}')
+                new_line = line.split('%')
+                temp = ''
+                for word in new_line:                    
+                    if word == 'zerba':
+                        # print(f'word pre : {word}')
+                        word = 'zebra'
+                        # print(f'word pos : {word}')
+                        if temp =='':
+                            temp = word
+                        else:
+                            temp +=  f'%{word}'
+
+                    else:
+                        if temp =='':
+                            temp = word
+                        else:
+                            temp += f'%{word}'
+
+                new_sentences.append(temp)
+            else:
+                # print(f'without "%" : {line}')
+                if line == 'zerba':
+                    # print(f'line pre : {line}')
+                    line = 'zebra'
+                    # print(f'line pos : {line}')
+                    new_sentences.append(line) 
+                else:
+                    new_sentences.append(line) 
+        # print(len(new_sentences))
+        return new_sentences
+
+    out = out()
