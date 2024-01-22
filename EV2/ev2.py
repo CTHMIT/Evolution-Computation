@@ -7,9 +7,9 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-class EV1_Config:
+class EV2_Config:
     """
-    7111093024 EV2 configuration class
+    EV2 configuration class
     """
     # class variables
     sectionName='ev2'
@@ -22,23 +22,23 @@ class EV1_Config:
      
     #constructor
     def __init__(self, inFileName):
-        #read YAML config and get EC_Engine section
+        #read YAML config and get the section
         infile=open(inFileName,'r')
         ymlcfg=yaml.safe_load(infile)
         infile.close()
         eccfg=ymlcfg.get(self.sectionName,None)
         if eccfg is None: raise Exception('Missing EV2 section in cfg file')
          
-        #iterate over options
+        # iterate over options
         for opt in self.options:
             if opt in eccfg:
                 optval=eccfg[opt]
  
-                #verify parameter type
+                # verify parameter type
                 if type(optval) != self.options[opt][0]:
                     raise Exception('Parameter "{}" has wrong type'.format(opt))
                  
-                #create attributes on the fly
+                # create attributes on the fly
                 setattr(self,opt,optval)
             else:
                 if self.options[opt][1]:
@@ -46,12 +46,12 @@ class EV1_Config:
                 else:
                     setattr(self,opt,None)
      
-    #string representation for class data    
+    # string representation for class data    
     def __str__(self):
         return str(yaml.dump(self.__dict__,default_flow_style=False))
 
 
-#Simple 1-D fitness function example
+# Simple 1-D fitness function example
 #        
 def fitnessFunc(x, UseOriginial = False):
     if UseOriginial:
@@ -60,7 +60,7 @@ def fitnessFunc(x, UseOriginial = False):
         return -10-(0.04*x) ** 2 + 10*np.cos(0.04*np.pi*x)
 
 
-#Find index of worst individual in population
+# Find index of the worst individual in population
 def findWorstIndex(l):
     minval=l[0].fit
     imin=0
@@ -71,7 +71,7 @@ def findWorstIndex(l):
     return imin
 
 
-#Print some useful stats to screen
+# Print some useful stats to screen
 def printStats(cfg, pop, gen):
     print('Generation:',gen)
     avgval=0
@@ -135,7 +135,7 @@ class EV2_func():
 
 
 
-#A trivial Individual class
+# A trivial Individual class
 class Individual:
     def __init__(self,x=0,fit=0):
         self.x=x
@@ -237,9 +237,7 @@ def ev1(cfg, Create_children = 5):
     plt.pause(0)
     plt.close()
 
-#
 # Main entry point
-#
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -258,8 +256,8 @@ def main(argv=None):
         if options.inputFileName is None:
             raise Exception("Must specify input file name using -i or --input option.")
         
-        #Get EV1 config params
-        cfg=EV1_Config(options.inputFileName)
+        #Get EV2 config params
+        cfg=EV2_Config(options.inputFileName)
         
         #print config params
         print(cfg)
@@ -268,7 +266,7 @@ def main(argv=None):
         ev1(cfg)
         
         if not options.quietMode:                    
-            print('7111093024 EV2 Completed!')  
+            print('EV2 Completed!')  
     
     except Exception as info:
         if 'options' in vars() and options.debugMode:
