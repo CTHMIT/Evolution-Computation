@@ -1,4 +1,4 @@
-# To run: python ev1.py --input ev1_example.cfg
+# To run: python ev1.py --input ev1.cfg
 
 import optparse
 import sys
