@@ -1,11 +1,4 @@
-#
-# ev1.py: The simplest EA ever!
-#
 # To run: python ev1.py --input ev1_example.cfg
-#
-# Note: EV1 is fairly naive and has many fundamental limitations,
-#           however, even though it's simple, it works!
-#
 
 import optparse
 import sys
@@ -34,23 +27,23 @@ class EV1_Config:
      
     #constructor
     def __init__(self, inFileName):
-        #read YAML config and get EC_Engine section
+        # read YAML config and get the section
         infile=open(inFileName,'r')
         ymlcfg=yaml.safe_load(infile)
         infile.close()
         eccfg=ymlcfg.get(self.sectionName,None)
         if eccfg is None: raise Exception('Missing EV1 section in cfg file')
          
-        #iterate over options
+        # iterate over options
         for opt in self.options:
             if opt in eccfg:
                 optval=eccfg[opt]
  
-                #verify parameter type
+                # verify parameter type
                 if type(optval) != self.options[opt][0]:
                     raise Exception('Parameter "{}" has wrong type'.format(opt))
                  
-                #create attributes on the fly
+                # create attributes on the fly
                 setattr(self,opt,optval)
             else:
                 if self.options[opt][1]:
@@ -58,12 +51,12 @@ class EV1_Config:
                 else:
                     setattr(self,opt,None)
      
-    #string representation for class data    
+    # string representation for class data    
     def __str__(self):
         return str(yaml.dump(self.__dict__,default_flow_style=False))
          
 
-#Simple 1-D fitness function example
+# Simple 1-D fitness function example
 #        
 def fitnessFunc(x, UseOriginial = False):
     if UseOriginial:
@@ -72,7 +65,7 @@ def fitnessFunc(x, UseOriginial = False):
         return -10-(0.04*x) ** 2 + 10*np.cos(0.04*np.pi*x)
 
 
-#Find index of worst individual in population
+# Find index of the worst individual in population
 def findWorstIndex(l):
     minval=l[0].fit
     imin=0
@@ -83,7 +76,7 @@ def findWorstIndex(l):
     return imin
 
 
-#Print some useful stats to screen
+# Print some useful stats to screen
 def printStats(cfg, pop, gen):
     print('Generation:',gen)
     avgval=0
@@ -123,51 +116,49 @@ def printStats(cfg, pop, gen):
 
 
 
-#A trivial Individual class
+# A trivial Individual class
 class Individual:
     def __init__(self,x=0,fit=0):
         self.x=x
         self.fit=fit
 
 
-#EV1: The simplest EA ever!
-#            
 def ev1(cfg):
     # start random number generator
     prng=Random()
     prng.seed(cfg.randomSeed)
     
-    #random initialization of population
+    # random initialization of population
     population=[]
     for i in range(cfg.populationSize):
         x=prng.uniform(cfg.minLimit,cfg.maxLimit)
         ind=Individual(x,fitnessFunc(x))
         population.append(ind)
         
-    #print stats    
+    # print stats    
     printStats(cfg, population,0)
 
-    #evolution main loop
+    # evolution main loop
     plt_data_mAx, plt_data_aVg, plt_data_sTd = [], [], []
 
     for i in range(cfg.generationCount):
-        #randomly select two parents
+        # Randomly select two parents
         parents=prng.sample(population,2)
 
-        #recombine using simple average
+        # recombine using the simple average
         childx=(parents[0].x+parents[1].x)/2
         
-        #random mutation using normal distribution
+        # random mutation using normal distribution
         if prng.random() <= cfg.mutationProb:
             childx=prng.normalvariate(childx,cfg.mutationStddev)
             
-        #survivor selection: replace worst
+        # survivor selection: replace worst
         child=Individual(childx,fitnessFunc(childx))
         iworst=findWorstIndex(population)
         if child.fit > population[iworst].fit:
             population[iworst]=child
         
-        #print stats    
+        # print stats    
         mAx ,aVg ,sTd = printStats(cfg, population,i+1)
         plt_data_mAx.append(mAx)
         plt_data_aVg.append(aVg)
@@ -188,46 +179,36 @@ def ev1(cfg):
     plt.pause(0)
     plt.close()
  
-
-
-    
-
-   
-
         
-#
 # Main entry point
-#
 def main(argv=None):
 
     if argv is None:
         argv = sys.argv
         
     try:
-        #
         # get command-line options
-        #
         parser = optparse.OptionParser()
         parser.add_option("-i", "--input", action="store", dest="inputFileName", help="input filename", default=None)
         parser.add_option("-q", "--quiet", action="store_true", dest="quietMode", help="quiet mode", default=False)
         parser.add_option("-d", "--debug", action="store_true", dest="debugMode", help="debug mode", default=False)
         (options, args) = parser.parse_args(argv)
 
-        #validate options
+        # validate options
         if options.inputFileName is None:
             raise Exception("Must specify input file name using -i or --input option.")
         
-        #Get EV1 config params
+        # Get EV1 config params
         cfg=EV1_Config(options.inputFileName)
         
-        #print config params
+        # print config params
         print(cfg)
                     
-        #run EV1
+        # run EV1
         ev1(cfg)
         
         if not options.quietMode:                    
-            print('7111093024 EV1 Completed!')    
+            print('EV1 Completed!')    
     
     except Exception as info:
         if 'options' in vars() and options.debugMode:
